@@ -22,10 +22,19 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
-        self.switch_led1_var = customtkinter.StringVar(value="off")
-        self.switch_led2_var = customtkinter.StringVar(value="off")
-        self.switch_led3_var = customtkinter.StringVar(value="off")
-        self.switch_led4_var = customtkinter.StringVar(value="off")
+        self.switch_led1_var = customtkinter.StringVar(value = "off")
+        self.switch_led2_var = customtkinter.StringVar(value = "off")
+        self.switch_led3_var = customtkinter.StringVar(value = "off")
+        self.switch_led4_var = customtkinter.StringVar(value = "off")
+        self.metros_var = customtkinter.StringVar()
+        
+        self.form = {
+                "metros": self.metros_var.get(),
+                "led1": "",
+                "led2": "",
+                "led3": "",
+                "led4": ""
+                }
 
         # configure window
         self.title("Matlab App")
@@ -71,11 +80,11 @@ class App(customtkinter.CTk):
         # create main entry and button
         self.label_metros = customtkinter.CTkLabel(self.title_form_frame, text="Metros")
         self.label_metros.grid(row=1, column=1, padx=(20, 0), pady=(20, 20), sticky="nw")
-        self.entry = customtkinter.CTkEntry(self.title_form_frame, placeholder_text="Metros")
+        self.entry = customtkinter.CTkEntry(self.title_form_frame, placeholder_text="Metros", textvariable=self.metros_var)
         self.entry.grid(row=1, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
         
         # Leds Inputs
-        self.switch_led1 = customtkinter.CTkSwitch(master=self.title_form_frame, text="Led 1", variable= self.switch_led1_var, onvalue="on", offvalue="off")
+        self.switch_led1 = customtkinter.CTkSwitch(master=self.title_form_frame, text="Led 1", variable= self.switch_led1_var, onvalue="on", offvalue="off", command = self.updateForm("led1", self.switch_led1_var.get()) )
         self.switch_led1.grid(row=2, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
         
         self.switch_led2 = customtkinter.CTkSwitch(master=self.title_form_frame,text="Led 2", variable= self.switch_led2_var, onvalue="on", offvalue="off" )
@@ -87,15 +96,20 @@ class App(customtkinter.CTk):
         self.switch_led4 = customtkinter.CTkSwitch(master=self.title_form_frame, text="Led 4", variable= self.switch_led4_var, onvalue="on", offvalue="off" )
         self.switch_led4.grid(row=3, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
         
-        self.calcular_button = customtkinter.CTkButton(master=self.title_form_frame, text="Calcular", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
+        self.calcular_button = customtkinter.CTkButton(master=self.title_form_frame, text="Calcular", fg_color="transparent", border_width=2, command=lambda : print(self.switch_led1_var.get()), text_color=("gray10", "#DCE4EE"))
         self.calcular_button.grid(row=4, column=2, columnspan=2,  pady=(20, 20), padx=(20, 20))
 
         # create the frame that contains the graphic result from matlab
         self.result_graphic = customtkinter.CTkFrame(self.content_frame, border_width=10)
         self.result_graphic.grid(row=1, column=0, sticky = 'nsew')
 
-        # create textbox
 
+    def updateForm(self, field, value):
+        self.form[field] = value
+        print(self.form[field])
+    
+        
+    
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
         print("CTkInputDialog:", dialog.get_input())
