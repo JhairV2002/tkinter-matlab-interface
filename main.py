@@ -7,14 +7,29 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 
 # en que posicion estaria la led solo 3 (decimales (double))
 # area de deteccion m2
+# cambia el numero de usuario max 20 usuarios
+# hasta 4 leds constantes
 
+# 3 simulaciones
+# 1 simulacion luces led
+# 2 calculo de errores (caida)
+# 3 modulaciones  
+
+# TODO
+# 4 inputs de focos encendido apagado 
+# input angulo de radiacion de 0 a 100
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
+        self.switch_led1_var = customtkinter.StringVar(value="off")
+        self.switch_led2_var = customtkinter.StringVar(value="off")
+        self.switch_led3_var = customtkinter.StringVar(value="off")
+        self.switch_led4_var = customtkinter.StringVar(value="off")
+
         # configure window
         self.title("Matlab App")
-        self.geometry(f"{1100}x{580}")
+        self.geometry(f"{1200}x{580}")
 
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
@@ -30,17 +45,21 @@ class App(customtkinter.CTk):
         # self.sidebar_frame.grid_rowconfigure(4, weight=1)
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="MatLab App", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Boton 1", command=self.sidebar_button_event)
+        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, text="Simulacion Led", command=self.sidebar_button_event)
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
-        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
+        self.sidebar_button_2 = customtkinter.CTkButton(self.sidebar_frame, text="Calculo de Errores", command=self.sidebar_button_event)
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
+        
+        
+        # self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="Modu", command=self.sidebar_button_event)
+        # self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
         # create main content
 
         self.content_frame = customtkinter.CTkFrame(self, border_width=10)
         self.content_frame.grid(row=0, column=1, sticky="nsew")
         self.content_frame.grid_rowconfigure(1, weight=1)
         self.content_frame.grid_columnconfigure(0, weight=1)
-
+        
         # create title and inputs frame
         self.title_form_frame= customtkinter.CTkFrame(self.content_frame, border_width = 10)
         self.title_form_frame.grid(row =0, column = 0, sticky = 'nsew')
@@ -50,19 +69,26 @@ class App(customtkinter.CTk):
         self.title_label.grid(row=0, column=0, padx=10, pady=10) 
 
         # create main entry and button
-
         self.label_metros = customtkinter.CTkLabel(self.title_form_frame, text="Metros")
         self.label_metros.grid(row=1, column=1, padx=(20, 0), pady=(20, 20), sticky="nw")
         self.entry = customtkinter.CTkEntry(self.title_form_frame, placeholder_text="Metros")
         self.entry.grid(row=1, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
         
-        self.label_focos = customtkinter.CTkLabel(self.title_form_frame, text="Focos")
-        self.label_focos.grid(row=1, column=4, padx=(20, 0), pady=(20, 20), sticky="nw")
-        self.entry_focos = customtkinter.CTkEntry(self.title_form_frame, placeholder_text="Focos")
-        self.entry_focos.grid(row=1, column=5, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
+        # Leds Inputs
+        self.switch_led1 = customtkinter.CTkSwitch(master=self.title_form_frame, text="Led 1", variable= self.switch_led1_var, onvalue="on", offvalue="off")
+        self.switch_led1.grid(row=2, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
+        
+        self.switch_led2 = customtkinter.CTkSwitch(master=self.title_form_frame,text="Led 2", variable= self.switch_led2_var, onvalue="on", offvalue="off" )
+        self.switch_led2.grid(row=2, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
+        
+        self.switch_led3 = customtkinter.CTkSwitch(master=self.title_form_frame, text="Led 3", variable= self.switch_led3_var, onvalue="on", offvalue="off" )
+        self.switch_led3.grid(row=3, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
+        
+        self.switch_led4 = customtkinter.CTkSwitch(master=self.title_form_frame, text="Led 4", variable= self.switch_led4_var, onvalue="on", offvalue="off" )
+        self.switch_led4.grid(row=3, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw")
         
         self.calcular_button = customtkinter.CTkButton(master=self.title_form_frame, text="Calcular", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
-        self.calcular_button.grid(row=1, column=7, padx=(20, 20), pady=(20, 20), sticky="nsew")
+        self.calcular_button.grid(row=4, column=2, columnspan=2,  pady=(20, 20), padx=(20, 20))
 
         # create the frame that contains the graphic result from matlab
         self.result_graphic = customtkinter.CTkFrame(self.content_frame, border_width=10)
