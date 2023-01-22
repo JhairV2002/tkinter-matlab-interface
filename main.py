@@ -5,6 +5,8 @@ import customtkinter
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+# en que posicion estaria la led solo 3 (decimales (double))
+# area de deteccion m2
 
 class App(customtkinter.CTk):
     def __init__(self):
