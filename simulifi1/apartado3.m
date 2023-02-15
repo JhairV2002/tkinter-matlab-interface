@@ -1,13 +1,11 @@
-clear
-close all
-clear all
 
 % Alejandro Villamar - Universidad Israel %
 %% ----- Parametros de simulacion ----- %%
+function apartado3(lum, area, leds, users, angle)
 % Ancho de banda
 BW = 20*10^6; % 20 MHz estándar 802.11a
 % Area del fotodiodo
-A = 15/(1000^2); % La intensidad luminosa se mide en 1 [lumen / pie^2] 
+A = lum/(area^2); % La intensidad luminosa se mide en 1 [lumen / pie^2] 
 % Ruido
 No = 10^-22; % A/Hz [Haas]
 N = No*BW;
@@ -16,7 +14,7 @@ N = No*BW;
 % Potencia optica
 Pled = 10;
 % Angulo de radiacion
-ang_rad = 100;
+ang_rad = angle;
 m= -log(2)/log(abs(cos(ang_rad*pi/180)));
 k = 1.4738;
 % ---.. Fotodiodo ..--- %
@@ -37,8 +35,8 @@ m= -log(2)/log(cos(60*pi/180));
 k = 1.4738;
 
 % Posicion de las bombillas LED
-L = 4; % 4 LED bombillas;
-K = 1, % 4 usuarios
+L = leds; % 4 LED bombillas;
+K = users, % 4 usuarios
 h = 0.85;
 LED_pos = [3.5, 3.5, 3;
     1.5, 3.5, 3;
@@ -173,7 +171,7 @@ ylabel('Room y [m]')
 zlabel('Maximum Ratio Combining - User rate [Mbps]')
 print('Maximum Ratio Combining','-dpng')
 close
-
+end
 
 
 

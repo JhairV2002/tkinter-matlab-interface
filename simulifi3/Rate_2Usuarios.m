@@ -1,10 +1,10 @@
+
 % Alejandro Villamar - Universidad Israel %
+%% ----- Parametros de simulacion ----- %%
 % Calculo Rate 2 usuarios
 % Calculo para realizar figura 2:
 % Mismos canales:
 % Canales de los usuariosx
-clear
-close all 
 
 n_users = 2;
 h = zeros(1,n_users)

@@ -1,13 +1,12 @@
-clc
-clear all 
-close all
 
 % Alejandro Villamar - Universidad Israel %
 %% ----- Parametros de simulacion ----- %%
+
+
 % Ancho de banda
 BW = 100*10^6; % 20 MHz
 % Area del fotodiodo
-A = 15/(1000^2);
+A = 150/(1000^2);
 % Ruido
 No = 10^-21; % A/Hz [Haas]
 Pn = No*BW; % P noise
@@ -50,9 +49,13 @@ grid on
 hold on
 ylabel('Señal temporal');
 xlabel('Número de portadoras')
+print('figure 1','-dpng')
+close
 
 figure(2)
 pwelch(x);
+print('figure 2','-dpng')
+close
 
 % Relación de potencia máxima a media
 Vmax =  max(abs(x));
@@ -67,6 +70,8 @@ figure(3)
 plot(x_rec)
 hold on 
 grid on
+print('figure 3','-dpng')
+close
 
 % Senal con Ibias %
 % El valor minimo determina el valor de BIAS
@@ -77,7 +82,8 @@ figure(4)
 plot(x_bias)
 hold on 
 grid on
-
+print('figure 4','-dpng')
+close
 
 %% ----- CANAL OFDM ------
 load canal_ofdm.mat

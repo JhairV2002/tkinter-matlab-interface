@@ -1,13 +1,11 @@
-clear
-close all
-clear all
 
 % Alejandro Villamar - Universidad Israel %
 %% ----- Parametros de simulacion ----- %%
+function apartado4(lum, area, leds, users, angle)
 % Ancho de banda
 B = 20*10^6; % 20 MHz estándar 802.11a
 % Area del fotodiodo
-A = 15/(1000^2); % La intensidad luminosa se mide en 1 [lumen / pie^2] 
+A = lum/(area^2); % La intensidad luminosa se mide en 1 [lumen / pie^2] 
 % Ruido
 No = 10^-22; % A/Hz [Haas]
 N = No*B;
@@ -15,7 +13,7 @@ N = No*B;
 % Potencia optica
 Pled = 10;
 % Angulo de radiacion
-ang_rad = 100;
+ang_rad = angle;
 m= -log(2)/log(abs(cos(ang_rad*pi/180)));
 k = 1.4738;
 % ---.. Fotodiodo ..--- %
@@ -31,8 +29,8 @@ Ts = (n^2)/(sin(FoV)^2);
 
 %% ----- Escenario ----- %%
 % Posicion de las bombillas LED
-L = 4; % 4 LED bombillas;
-K = 1, % 1 usuarios
+L = leds; % 4 LED bombillas;
+K = users, % 1 usuarios
 h = 0.85;
 % Posicion de los transmisores opticos
 LED_pos = [3.5, 3.5, 3; 
@@ -98,4 +96,4 @@ ylabel('Room y [m]')
 zlabel('Rate Zero Forcing')
 print('Rate Zero Forcing','-dpng')
 close
-
+end

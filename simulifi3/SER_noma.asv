@@ -6,9 +6,9 @@
 % Posicion del LED
 LED_pos = [2.5, 2.5, 3]
 % Angulo de irradiación
-Tr_ang = 60;
+Tr_ang = angle;
 % Area de deteccion 1 cm2
-A = 150/(1000^2);
+A = lum/(area^2);
 % Directividad del FoV
 k = 1.4738;
 % Responsividad (capacidad de respuesta)
@@ -143,7 +143,7 @@ semilogy(Pled_dB,BER2_noma_plot,'-.r')
 legend('Usuario 1', 'Usuario 2')
 print('semilogyBER','-dpng')
 close
-
+end
 
 
 
