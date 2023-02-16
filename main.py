@@ -5,8 +5,7 @@ import matlab.engine
 import os
 import matlab.engine
 from PIL import ImageTk, Image
-import time
-
+from functools import partial
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(
@@ -35,6 +34,10 @@ class App(customtkinter.CTk):
         self.switch_led3_var = customtkinter.StringVar(value="off")
         self.switch_led4_var = customtkinter.StringVar(value="off")
         self.metros_var = customtkinter.StringVar()
+        self.lumens = customtkinter.StringVar()
+        self.usuarios = customtkinter.StringVar()
+        self.angulo = customtkinter.StringVar()
+        self.num_leds = 0
 
         self.form = {
             "metros": self.metros_var.get(),
@@ -122,6 +125,7 @@ class App(customtkinter.CTk):
         self.fotodeodos_entry = customtkinter.CTkEntry(
             self.title_form_frame,
             placeholder_text="Numero de lumens",
+            textvariable=self.lumens,
         )
 
         self.fotodeodos_entry.grid(
@@ -136,7 +140,9 @@ class App(customtkinter.CTk):
         )
 
         self.angulo_radiacion_entry = customtkinter.CTkEntry(
-            self.title_form_frame, placeholder_text="Ángulo en radianes"
+            self.title_form_frame,
+            placeholder_text="Ángulo en radianes",
+            textvariable=self.angulo,
         )
 
         self.angulo_radiacion_entry.grid(
@@ -152,12 +158,15 @@ class App(customtkinter.CTk):
         )
 
         self.num_usuarios_entry = customtkinter.CTkEntry(
-            self.title_form_frame, placeholder_text="Número de usuarios"
+            self.title_form_frame,
+            placeholder_text="Número de usuarios",
+            textvariable=self.usuarios,
         )
 
         self.num_usuarios_entry.grid(
             row=1, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
         )
+
         # Leds Inputs
         self.switch_led1 = customtkinter.CTkSwitch(
             master=self.title_form_frame,
@@ -165,7 +174,8 @@ class App(customtkinter.CTk):
             variable=self.switch_led1_var,
             onvalue="on",
             offvalue="off",
-            command=self.updateForm("led1", self.switch_led1_var.get()),
+            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
+            # command=print(self.switch_led1_var.get()),
         )
         self.switch_led1.grid(
             row=3, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -177,6 +187,7 @@ class App(customtkinter.CTk):
             variable=self.switch_led2_var,
             onvalue="on",
             offvalue="off",
+            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
         )
         self.switch_led2.grid(
             row=3, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -188,6 +199,7 @@ class App(customtkinter.CTk):
             variable=self.switch_led3_var,
             onvalue="on",
             offvalue="off",
+            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
         )
         self.switch_led3.grid(
             row=4, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -199,6 +211,7 @@ class App(customtkinter.CTk):
             variable=self.switch_led4_var,
             onvalue="on",
             offvalue="off",
+            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
         )
         self.switch_led4.grid(
             row=4, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -210,6 +223,7 @@ class App(customtkinter.CTk):
             fg_color="transparent",
             border_width=2,
             command=self.calcular_grafica,
+            # command=self.printValues,
             text_color=("gray10", "#DCE4EE"),
         )
         self.calcular_button.grid(
@@ -229,6 +243,15 @@ class App(customtkinter.CTk):
         self.form[field] = value
         print(self.form[field])
 
+    def incrementLeds(self, value):
+        if str(value) == "on":
+            self.num_leds += 1
+            print("valor aumentado")
+        else:
+            self.num_leds -= 1
+            print("valor disminuido")
+        # print(type(str(self.switch_led1_var.get())))
+
     def runMatlabFile(self):
         os.chdir(r"./simulifi1/")
         eng = matlab.engine.start_matlab()
@@ -247,10 +270,29 @@ class App(customtkinter.CTk):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
 
+    def printValues(self):
+        print(int(self.metros_var.get()))
+        print(int(self.usuarios.get()))
+        print(int(self.angulo.get()))
+        print(int(self.lumens.get()))
+        print(self.num_leds)
+
     def calcular_grafica(self):
         eng = matlab.engine.start_matlab()
         eng.cd(r"simulifi1", nargout=0)
-        eng.apartado1(nargout=0)
+        eng.apartado1(
+            # lumens
+            matlab.double([int(self.lumens.get())]),
+            # Area
+            matlab.double([int(self.metros_var.get())]),
+            # leds
+            matlab.double([self.num_leds]),
+            # users
+            matlab.double([int(self.usuarios.get())]),
+            # Angulo
+            matlab.double([int(self.angulo.get())]),
+            nargout=0,
+        )
         # create the image
         self.graphic_image1 = ImageTk.PhotoImage(
             Image.open(r"./simulifi1/Rate_NoCoop.png")
