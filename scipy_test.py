@@ -8,16 +8,16 @@ import matlab
 
 eng = matlab.engine.start_matlab()
 eng.cd(r"simulifi1")
-eng.apartado1(
+eng.apartado5(
     # lumens
-    matlab.double([150]),
+    matlab.double([450]),
     # Area
     matlab.double([1000]),
     # leds
-    matlab.double([1]),
+    matlab.double([4]),
     # users
-    matlab.double([2]),
+    matlab.double([1]),
     # Angulo
-    matlab.double([100]),
+    matlab.double([60]),
     nargout=0,
 )

@@ -6,7 +6,9 @@ import os
 import matlab.engine
 from PIL import ImageTk, Image
 
-customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode(
+    "Light"
+)  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(
     "blue"
 )  # Themes: "blue" (standard), "green", "dark-blue"
@@ -44,11 +46,21 @@ class App(customtkinter.CTk):
         # self.sidebar_frame.grid(row=0, column=0,  sticky="nsew")
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         # self.sidebar_frame.grid_rowconfigure(4, weight=1)
-        self.logo_label = customtkinter.CTkLabel(
-            self.sidebar_frame,
-            text="MatLab App",
-            font=customtkinter.CTkFont(size=20, weight="bold"),
+
+        # Logo universidad
+        self.universidad_logo = Image.open(r"./uisrael_logo.png")
+        self.universidad_logo = self.universidad_logo.resize((250, 100), Image.LANCZOS)
+
+        self.universidad_component = customtkinter.CTkImage(
+            light_image=self.universidad_logo,
+            # Image.open(r"./simulifi1/Rate_NoCoop.png")
         )
+        # place the image in label
+        self.logo_label = tkinter.Label(
+            self.sidebar_frame, image=self.universidad_component
+        )
+
+        self.logo_label.grid(row=1, column=0, sticky="ew")
 
         self.sidebar_button_2 = customtkinter.CTkButton(
             self.sidebar_frame,
@@ -72,7 +84,9 @@ class App(customtkinter.CTk):
         self.sidebar_button_4.grid(row=4, column=0, padx=20, pady=10)
         # create main content
 
-        self.content_frame = customtkinter.CTkScrollableFrame(self, border_width=10)
+        self.content_frame = customtkinter.CTkScrollableFrame(
+            self,
+        )
         self.content_frame.grid(row=0, column=1, sticky="nsew")
         self.content_frame.grid_rowconfigure(1, weight=1)
         self.content_frame.grid_columnconfigure(0, weight=1)
@@ -87,9 +101,7 @@ class App(customtkinter.CTk):
         self.usuarios = customtkinter.StringVar()
         self.angulo = customtkinter.StringVar()
         self.num_leds = 0
-        self.title_form_frame = customtkinter.CTkFrame(
-            self.content_frame, border_width=10
-        )
+        self.title_form_frame = customtkinter.CTkFrame(self.content_frame)
         self.title_form_frame.grid(row=0, column=0, sticky="nsew")
 
         # create title
@@ -186,7 +198,7 @@ class App(customtkinter.CTk):
             variable=self.switch_led2_var,
             onvalue="on",
             offvalue="off",
-            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
+            command=lambda: self.incrementLeds(self.switch_led2_var.get()),
         )
         self.switch_led2.grid(
             row=3, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -198,7 +210,7 @@ class App(customtkinter.CTk):
             variable=self.switch_led3_var,
             onvalue="on",
             offvalue="off",
-            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
+            command=lambda: self.incrementLeds(self.switch_led3_var.get()),
         )
         self.switch_led3.grid(
             row=4, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -210,7 +222,7 @@ class App(customtkinter.CTk):
             variable=self.switch_led4_var,
             onvalue="on",
             offvalue="off",
-            command=lambda: self.incrementLeds(self.switch_led1_var.get()),
+            command=lambda: self.incrementLeds(self.switch_led4_var.get()),
         )
         self.switch_led4.grid(
             row=4, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
@@ -218,7 +230,7 @@ class App(customtkinter.CTk):
 
         self.calcular_button = customtkinter.CTkButton(
             master=self.title_form_frame,
-            text="Calcular",
+            text="Calcular Apartado1",
             fg_color="transparent",
             border_width=2,
             command=self.calcular_grafica,
@@ -226,12 +238,64 @@ class App(customtkinter.CTk):
             text_color=("gray10", "#DCE4EE"),
         )
         self.calcular_button.grid(
-            row=5, column=2, columnspan=2, pady=(20, 20), padx=(20, 20)
+            row=5, column=1, columnspan=2, pady=(20, 20), padx=(20, 20)
+        )
+
+        self.calcular_apartado2 = customtkinter.CTkButton(
+            master=self.title_form_frame,
+            text="Calcular Apartado2",
+            fg_color="transparent",
+            border_width=2,
+            text_color=("gray10", "#DCE4EE"),
+            command=self.calcular_apartado2,
+        )
+
+        self.calcular_apartado2.grid(
+            row=5, column=3, columnspan=2, pady=(20, 20), padx=(20, 20)
+        )
+
+        self.calcular_apartado3 = customtkinter.CTkButton(
+            master=self.title_form_frame,
+            text="Calcular Apartado3",
+            fg_color="transparent",
+            border_width=2,
+            text_color=("gray10", "#DCE4EE"),
+            command=self.calcular_apartado3,
+        )
+
+        self.calcular_apartado3.grid(
+            row=5, column=5, columnspan=2, pady=(20, 20), padx=(20, 20)
+        )
+
+        self.calcular_apartado4 = customtkinter.CTkButton(
+            master=self.title_form_frame,
+            text="Calcular Apartado4",
+            fg_color="transparent",
+            border_width=2,
+            command=self.calcular_apartado4,
+            text_color=("gray10", "#DCE4EE"),
+        )
+
+        self.calcular_apartado4.grid(
+            row=5, column=7, columnspan=2, pady=(20, 20), padx=(20, 20)
+        )
+
+        self.calcular_apartado5 = customtkinter.CTkButton(
+            master=self.title_form_frame,
+            text="Calcular Apartado5",
+            fg_color="transparent",
+            border_width=2,
+            text_color=("gray10", "#DCE4EE"),
+            command=self.calcular_apartado5,
+        )
+
+        self.calcular_apartado5.grid(
+            row=5, column=9, columnspan=2, pady=(20, 20), padx=(20, 20)
         )
 
         # create the frame that contains the graphic result from matlab
         self.result_graphic = customtkinter.CTkFrame(
-            self.content_frame, border_width=10
+            self.content_frame,
         )
         self.result_graphic.grid(row=1, column=0, sticky="nsew")
         self.result_graphic.grid_columnconfigure(1, weight=1)
@@ -244,11 +308,13 @@ class App(customtkinter.CTk):
 
     def incrementLeds(self, value):
         if str(value) == "on":
-            self.num_leds += 1
-            print("valor aumentado")
+            self.num_leds = self.num_leds + 1
+            print(value)
+            print(self.num_leds)
         else:
-            self.num_leds -= 1
-            print("valor disminuido")
+            self.num_leds = self.num_leds - 1
+            print(value)
+            print(self.num_leds)
         # print(type(str(self.switch_led1_var.get())))
 
     def runMatlabFile(self):
@@ -322,6 +388,194 @@ class App(customtkinter.CTk):
 
         self.graphic_label1.grid(row=0, column=1, sticky="ew")
         self.graphic_label2.grid(row=0, column=2, sticky="ew")
+
+    def calcular_apartado2(self):
+        children = self.result_graphic.winfo_children()
+        if len(children) != 0:
+            for child in children:
+                child.destroy()
+
+        eng = matlab.engine.start_matlab()
+        eng.cd(r"simulifi1", nargout=0)
+        eng.apartado2(
+            # lumens
+            matlab.double([int(self.lumens.get())]),
+            # Area
+            matlab.double([int(self.metros_var.get())]),
+            # leds
+            matlab.double([self.num_leds]),
+            # users
+            matlab.double([int(self.usuarios.get())]),
+            # Angulo
+            matlab.double([int(self.angulo.get())]),
+            nargout=0,
+        )
+        # create the image
+        graph1 = Image.open(r"./simulifi1/Rate_Coop.png")
+        graph1.thumbnail((525, 525))
+
+        graph2 = Image.open(r"./simulifi1/SINR_Coop.png")
+        graph2.thumbnail((525, 525))
+        self.graphic_image1 = ImageTk.PhotoImage(
+            graph1
+            # Image.open(r"./simulifi1/Rate_NoCoop.png")
+        )
+        self.graphic_image2 = ImageTk.PhotoImage(
+            # Image.open(r"./simulifi1/SINR_NoCoop.png")
+            graph2
+        )
+        # place the image in label
+        self.graphic_label1 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image1
+        )
+
+        self.graphic_label2 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image2
+        )
+
+        self.graphic_label1.grid(row=0, column=1, sticky="ew")
+        self.graphic_label2.grid(row=0, column=2, sticky="ew")
+
+    def calcular_apartado3(self):
+        children = self.result_graphic.winfo_children()
+        if len(children) != 0:
+            for child in children:
+                child.destroy()
+        eng = matlab.engine.start_matlab()
+        eng.cd(r"simulifi1", nargout=0)
+        eng.apartado3(
+            # lumens
+            matlab.double([int(self.lumens.get())]),
+            # Area
+            matlab.double([int(self.metros_var.get())]),
+            # leds
+            matlab.double([self.num_leds]),
+            # users
+            matlab.double([int(self.usuarios.get())]),
+            # Angulo
+            matlab.double([int(self.angulo.get())]),
+            nargout=0,
+        )
+        # create the image
+        graph1 = Image.open(r"./simulifi1/Equal Gain Combining.png")
+        graph1.thumbnail((525, 525))
+
+        graph2 = Image.open(r"./simulifi1/Maximum Ratio Combining.png")
+        graph2.thumbnail((525, 525))
+
+        graph3 = Image.open(r"./simulifi1/Blind Interference Alignment.png")
+        graph3.thumbnail((525, 525))
+
+        self.graphic_image1 = ImageTk.PhotoImage(
+            graph1
+            # Image.open(r"./simulifi1/Rate_NoCoop.png")
+        )
+        self.graphic_image2 = ImageTk.PhotoImage(
+            # Image.open(r"./simulifi1/SINR_NoCoop.png")
+            graph2
+        )
+
+        self.graphic_image3 = ImageTk.PhotoImage(graph3)
+
+        # place the image in label
+        self.graphic_label1 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image1
+        )
+
+        self.graphic_label2 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image2
+        )
+
+        self.graphic_label3 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image3
+        )
+
+        self.graphic_label1.grid(row=0, column=1, sticky="ew")
+        self.graphic_label2.grid(row=0, column=2, sticky="ew")
+        self.graphic_label3.grid(row=1, column=1, sticky="ew")
+
+    def calcular_apartado4(self):
+        children = self.result_graphic.winfo_children()
+        if len(children) != 0:
+            for child in children:
+                child.destroy()
+        eng = matlab.engine.start_matlab()
+        eng.cd(r"simulifi1", nargout=0)
+        eng.apartado4(
+            # lumens
+            matlab.double([int(self.lumens.get())]),
+            # Area
+            matlab.double([int(self.metros_var.get())]),
+            # leds
+            matlab.double([self.num_leds]),
+            # users
+            matlab.double([int(self.usuarios.get())]),
+            # Angulo
+            matlab.double([int(self.angulo.get())]),
+            nargout=0,
+        )
+        # create the image
+        graph1 = Image.open(r"./simulifi1/Rate Zero Forcing.png")
+        graph1.thumbnail((525, 525))
+
+        graph2 = Image.open(r"./simulifi1/Rate Block Diagonalization.png")
+        graph2.thumbnail((525, 525))
+
+        self.graphic_image1 = ImageTk.PhotoImage(
+            graph1
+            # Image.open(r"./simulifi1/Rate_NoCoop.png")
+        )
+        self.graphic_image2 = ImageTk.PhotoImage(
+            # Image.open(r"./simulifi1/SINR_NoCoop.png")
+            graph2
+        )
+
+        # place the image in label
+        self.graphic_label1 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image1
+        )
+
+        self.graphic_label2 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image2
+        )
+
+        self.graphic_label1.grid(row=0, column=1, sticky="ew")
+        self.graphic_label2.grid(row=0, column=2, sticky="ew")
+
+    def calcular_apartado5(self):
+        children = self.result_graphic.winfo_children()
+        if len(children) != 0:
+            for child in children:
+                child.destroy()
+        eng = matlab.engine.start_matlab()
+        eng.cd(r"simulifi1", nargout=0)
+        eng.apartado5(
+            # lumens
+            matlab.double([int(self.lumens.get())]),
+            # Area
+            matlab.double([int(self.metros_var.get())]),
+            # leds
+            matlab.double([self.num_leds]),
+            # users
+            matlab.double([int(self.usuarios.get())]),
+            # Angulo
+            matlab.double([int(self.angulo.get())]),
+            nargout=0,
+        )
+        # create the image
+        graph1 = Image.open(r"./simulifi1/ydist.png")
+        graph1.thumbnail((525, 525))
+
+        self.graphic_image1 = ImageTk.PhotoImage(
+            graph1
+            # Image.open(r"./simulifi1/Rate_NoCoop.png")
+        )
+        # place the image in label
+        self.graphic_label1 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image1
+        )
+
+        self.graphic_label1.grid(row=0, column=1, sticky="ew", columnspan=2)
 
     def calcular_practica(self):
         eng = matlab.engine.start_matlab()

@@ -96,4 +96,5 @@ ylabel('Room y [m]')
 zlabel('Rate Zero Forcing')
 print('Rate Zero Forcing','-dpng')
 close
+
 end
