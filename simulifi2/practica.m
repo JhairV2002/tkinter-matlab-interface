@@ -1,8 +1,6 @@
 
 % Alejandro Villamar - Universidad Israel %
 %% ----- Parametros de simulacion ----- %%
-
-
 % Ancho de banda
 BW = 100*10^6; % 20 MHz
 % Area del fotodiodo
@@ -49,12 +47,12 @@ grid on
 hold on
 ylabel('Señal temporal');
 xlabel('Número de portadoras')
-print('figure 1','-dpng')
+print('figure_1','-dpng')
 close
 
 figure(2)
 pwelch(x);
-print('figure 2','-dpng')
+print('figure_2','-dpng')
 close
 
 % Relación de potencia máxima a media
@@ -70,7 +68,7 @@ figure(3)
 plot(x_rec)
 hold on 
 grid on
-print('figure 3','-dpng')
+print('figure_3','-dpng')
 close
 
 % Senal con Ibias %
@@ -82,7 +80,7 @@ figure(4)
 plot(x_bias)
 hold on 
 grid on
-print('figure 4','-dpng')
+print('figure_4','-dpng')
 close
 
 %% ----- CANAL OFDM ------
