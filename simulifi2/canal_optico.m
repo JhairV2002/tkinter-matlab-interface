@@ -1,32 +1,37 @@
-clc
-close all
-clear all
+%Alejandro Villamar - Universidad Israel 2023%
+%% ----- Parametros de simulacion red LIFI ----- %%
+% Rango del espectro de luz - %Estándar 802.15.7 de la IEEE
+lambda = [475]; % Rango (380 - 789) de longitud de onda en nanómetros (nm)
+% Convertir a metros
+lambda_m = lambda * 1e-9; % Convertir nm a metros
+% Calcular las frecuencias correspondientes
+c = 299792458; % Velocidad de la luz en metros por segundo
+f = c ./ lambda_m; % Frecuencias en Hz
+% Frecuencia
+B = f; 
+% Area del fotodiodo (m²)
+A = 5*5;
+% Nivel de Ruido (Potencia de la señal y se mide en unidades de amperios por hertz)
+No = 10^-22; % A^2/Hz (Densidad espectral de potencia de ruido)
+N = No*B; % Densidad espectral de ruido
 
-% Alejandro Villamar - Universidad Israel %
-%% ----- ESCENARIO OPTICO ----- %%
-% Ancho de banda
-BW = 20*10^6; % 20 MHz
-% Area del fotodiodo
-A = 15/(1000^2);
-% Ruido
-No = 10^-22; % A/Hz [Haas]
-N = No*BW;
-
-% Responsividad
-R = 0.53;
-
-% Ganancia del filtro
-n = 1.5; 
-fov =  70*pi/180;
-Ts = (n^2)/(sin(fov)^2)
-% FoV
-FoV =  70*pi/180;
-
-% Radiacion (perpendicular al suelo)
-Pled_dB = 10; 
+%% ---.. Transmisor ..--- %
+% Potencia optica
+Pled_dB = 15; %Potencia óptica del LED
 Pled = 10^(Pled_dB*0.1)
-m= -log(2)/log(cos(60*pi/180));
-
+% Angulo de radiacion
+ang_rad = 60; %Ángulo de  radiación LED
+m = -log(2)/log(abs(cos(ang_rad*pi/180))); %Distribución de intensidad angular Lambert-Beer
+k = 1.4738; %Relación de ganancia de la antena receptora
+%% ---.. Fotodiodo ..--- %
+% Responsividad (capacidad de eficiencia de conversión de la luz en señal eléctrica)
+R = 0.62; 
+% Orden del filtro (filtra la señal eléctrica producida por el fotodiodo, elimina el ruido y otras interferencias)
+n = 1.5;
+% FoV (Campo de visión) (ángulo sólido del sensor de la cámara)
+FoV =  70*pi/180;
+% Respuesta del filtro (Transmisión óptica del filtro)
+Ts = (n^2)/(sin(FoV)^2);
 
 
 %% Canal optico LoS
@@ -64,7 +69,7 @@ hold on
 grid on
 xlabel('Frecuencia [MHz]')
 ylabel('Contribución multipath H_{diff}')
-print('Barplot1co','-dpng')
+print('Contribución_multipath_H_{diff}','-dpng')
 close
 
 %% Canal del front-end optico
@@ -78,7 +83,7 @@ hold on
 grid on
 xlabel('Frecuencia [MHz]')
 ylabel('Contribución del front-end ópticos')
-print('Barplot2co','-dpng')
+print('Contribución_del_front_end_ópticos','-dpng')
 close
 
 %% Canal Optico total total
@@ -89,7 +94,7 @@ hold on
 grid on
 xlabel('Frecuencia [MHz]')
 ylabel('Canal Óptico')
-print('Barplot3co','-dpng')
+print('Canal_Óptico','-dpng')
 close
 
 %% Canal temporal sin tener en cuenta los efectos del front-end
@@ -100,7 +105,7 @@ stem(t,ht);
 grid on
 xlabel('Tiempo [nseg]')
 ylabel('Respuesta temporal del canal óptico (NO Front-end)')
-print('Barplot4co','-dpng')
+print('Respuesta_temporal_del_canal_óptico_(NO_Front-end)','-dpng')
 close
 
 %% Canal temporal teniendo en cuenta los efecto del front
@@ -111,7 +116,7 @@ plot(abs(ht_opt))
 grid on
 xlabel('Tiempo [nseg]')
 ylabel('Respuesta temporal del canal óptico')
-print('Barplot5co','-dpng')
+print('Respuesta_temporal_del_canal_óptico','-dpng')
 close
 % La forma debe parecerse al canal impulsivo
 

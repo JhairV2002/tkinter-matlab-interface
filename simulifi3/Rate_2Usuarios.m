@@ -1,6 +1,5 @@
 
-% Alejandro Villamar - Universidad Israel %
-%% ----- Parametros de simulacion ----- %%
+%% ----- Simulacion ----- %%
 % Calculo Rate 2 usuarios
 % Calculo para realizar figura 2:
 % Mismos canales:
@@ -43,7 +42,7 @@ grid on
 hold on 
 plot(R_1_orth,R_2_orth,'-r')
 legend('NOMA','Orthogonal')
-print('Barplot2u','-dpng')
+print('NOMA_&_Orthogonal','-dpng')
 close
 
 

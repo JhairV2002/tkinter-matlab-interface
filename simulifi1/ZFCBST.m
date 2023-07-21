@@ -1,7 +1,7 @@
 function [W,S_tot] = ZFCBST(h,M,t,N,r)
-%% Funciï¿½n que genera los pesos y canales tras aplicar el esquema ZF-CBST
+%% Función que genera los pesos y canales tras aplicar el esquema ZF-CBST
 %
-% Parï¿½metros de entrada
+% Parámetros de entrada
 % ---------------------
 %
 % M --> Cantidad de BS
@@ -12,7 +12,7 @@ function [W,S_tot] = ZFCBST(h,M,t,N,r)
 
 H = h;
 
-%% e) ZF segï¿½n mï¿½todo de Spencer
+%% e) ZF según método de Spencer
 P=zeros(N,r); % potencias para cada bit de cada usuario: cada fila un usuario
 W=zeros(M*t,N*r); % pesos para cada bit de cada usuario: cada columna un usuario
 S_tot=zeros(r,N);  % autovalores para cada bit (stream) de cada usuario: cada columna un usuario

@@ -1,49 +1,41 @@
-
-% Alejandro Villamar - Universidad Israel %
-%% ----- Parametros de simulacion ----- %%
-function apartado3(lum, area, leds, users, angle)
-% Ancho de banda
-BW = 20*10^6; % 20 MHz estándar 802.11a
-% Area del fotodiodo
-A = lum/(area^2); % La intensidad luminosa se mide en 1 [lumen / pie^2] 
-% Ruido
-No = 10^-22; % A/Hz [Haas]
-N = No*BW;
-
-% ---.. Transmisor ..--- %
+%Alejandro Villamar - Universidad Israel 2023%
+%% ----- Parametros de simulacion red LIFI ----- %%
+function apartado3(area1,area2,pled,angle,leds,users)
+% Rango del espectro de luz - %Estándar 802.15.7 de la IEEE
+BW = [475]; % Rango (380 - 789) de longitud de onda en nanómetros (nm)
+% Area del fotodiodo (m²)
+A = (area1*area2);
+% Nivel de Ruido (Potencia de la señal y se mide en unidades de amperios por hertz)
+No = 10^-22; % A^2/Hz (Densidad espectral de potencia de ruido)
+N = No*BW; % Densidad espectral de ruido 
+%% ---.. Transmisor ..--- %
 % Potencia optica
-Pled = 10;
-% Angulo de radiacion
-ang_rad = angle;
-m= -log(2)/log(abs(cos(ang_rad*pi/180)));
-k = 1.4738;
-% ---.. Fotodiodo ..--- %
-% Responsividad (capacidad de respuesta)
-R = 0.53;
-
-% Ganancia del filtro
-n = 1.5; 
-% FoV (Campo de visión)
-fov =  70*pi/180;
-% Respuesta del filtro
-Ts = (n^2)/(sin(fov)^2)
-
-% Radiacion (perpendicular al suelo)
-Pled_dB = 10; 
+Pled_dB = pled; %Potencia óptica del LED
 Pled = 10^(Pled_dB*0.1)
-m= -log(2)/log(cos(60*pi/180));
-k = 1.4738;
+% Angulo de radiacion
+ang_rad = angle; %Ángulo de  radiación LED
+m = -log(2)/log(abs(cos(ang_rad*pi/180))); %Distribución de intensidad angular Lambert-Beer
+k = 1.4738; %Relación de ganancia de la antena receptora
+%% ---.. Fotodiodo ..--- %
+% Responsividad (capacidad de eficiencia de conversión de la luz en señal eléctrica)
+R = 0.62; 
+% Orden del filtro (filtra la señal eléctrica producida por el fotodiodo, elimina el ruido y otras interferencias)
+n = 1.5;
+% FoV (Campo de visión) (ángulo sólido del sensor de la cámara)
+FoV =  70*pi/180;
+% Respuesta del filtro (Transmisión óptica del filtro)
+Ts = (n^2)/(sin(FoV)^2);
 
+%% ----- Escenario ----- %%
 % Posicion de las bombillas LED
-L = leds; % 4 LED bombillas;
-K = users, % 4 usuarios
-h = 0.85;
-LED_pos = [3.5, 3.5, 3;
-    1.5, 3.5, 3;
-    3.5, 1.5, 3;
-    1.5, 1.5, 3]
-
-
+L = leds; % 4 LEDS bombillas;
+K = users; % 1 Usuarios
+h = 0.85; % Altura del receptor
+% Posicion de los transmisores opticos
+LED_pos = [3.5, 3.5, 3; 
+           1.5, 3.5, 3; 
+           3.5, 1.5, 3; 
+           1.5, 1.5, 3];
 
 % vector de irradiación
 U = [0 0 1];
@@ -52,9 +44,9 @@ U = [0 0 1];
 alfa = [45 135 225 315]*(pi/180);
 beta = 45*(pi/180);
 
-
-% Creamos el mapa
+%% ----- Mapa 3D ----- %%
 grano = 0.05; % define la precision de nuestro mapa de color
+% Escenario 5m x 5m x 3m
 [Ax,Ay] = meshgrid([0:grano:5]);
 H = zeros(L);
 
@@ -65,6 +57,7 @@ R_rmc = zeros(size(Ax));
 R_opc = zeros(size(Ax));
 R_mmse = zeros(size(Ax));
 R_bia_int = zeros(size(Ax));
+
 % Valor promedio de las veces que hay varios usuarios bajo la misma luz
 Emean = mean((1./(round(rand(1,100000)*(K-1))+1)));
 Ad = (10e-2)*randn;
@@ -127,10 +120,6 @@ for x = 1:length(Ax)
                  
         R_rmc(x,y) = BW*log2(1+SINR_rmc);
 
-        
-        
-
-        
         %% Blind Interference Alignment %% Alineación de Interferencia Ciega %%
         H = H';
         Bbia = (1/(L+K-1));
@@ -144,14 +133,15 @@ for x = 1:length(Ax)
 end
 
 
-%% Mapas de color
+%% Mapas de color 3D
 figure(1)
 surf(Ax,Ay,real(R_bia)/10^6,real(R_bia)/10^6,'EdgeColor','none')
 colorbar
 xlabel('Room x [m]')
 ylabel('Room y [m]')
 zlabel('Blind Interference Alignment - User rate [Mbps]')
-print('Blind Interference Alignment','-dpng')
+title('Blind Interference Alignment - User rate [Mbps]')
+print('Blind_Interference_Alignment','-dpng')
 close
 
 figure(2)
@@ -160,7 +150,8 @@ colorbar
 xlabel('Room x [m]')
 ylabel('Room y [m]')
 zlabel('Equal Gain Combining - User rate [Mbps]')
-print('Equal Gain Combining','-dpng')
+title('Equal Gain Combining - User rate [Mbps]')
+print('Equal_Gain_Combining','-dpng')
 close
 
 figure(3)
@@ -169,14 +160,10 @@ colorbar
 xlabel('Room x [m]')
 ylabel('Room y [m]')
 zlabel('Maximum Ratio Combining - User rate [Mbps]')
-print('Maximum Ratio Combining','-dpng')
+title('Maximum Ratio Combining - User rate [Mbps]')
+print('Maximum_Ratio_Combining','-dpng')
 close
+
 end
-
-
-
-
-
-
 
 

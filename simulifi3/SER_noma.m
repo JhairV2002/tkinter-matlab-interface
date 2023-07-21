@@ -1,5 +1,3 @@
-
-
 % Alejandro Villamar - Universidad Israel %
 %% ----- Parametros de simulacion ----- %%
 
@@ -45,8 +43,8 @@ for p = 1:length(Pled_dB)
         
         % Establecemos la posicion de los usuarios
         % Usuarios en la misma posicion con una pequena variacion de medio metro
-        %         pos_usu(1,:) = [rand(1,2)*5,0.85];
-        %         pos_usu(2,:) = pos_usu(1,:)*rand*0.5;
+                 pos_usu(1,:) = [rand(1,2)*5,0.85];
+                 pos_usu(2,:) = pos_usu(1,:)*rand*0.5;
         
         % Usuarios con un canal muy diferente
         % OJO: El canal con el peor canal debe ser el primero
@@ -68,12 +66,12 @@ for p = 1:length(Pled_dB)
         simb = [0 1];
         
         % 4-PAM
-%         Npam = 4;
-%         simb = [0 1/3 2/3 1];
+          Npam = 4;
+          simb = [0 1/3 2/3 1];
         
         % 8-PAM
-%         Npam = 8;
-%         simb = linspace(0,1,Npam);
+          Npam = 8;
+          simb = linspace(0,1,Npam);
         
         % Genereamos la señal de acuerdo a la modulacion M-PAM seleccionada
         simbValue = round(rand(K,lenSec)*(Npam-1)+1);

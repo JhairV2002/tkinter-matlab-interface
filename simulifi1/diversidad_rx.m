@@ -2,7 +2,7 @@ clear
 close all
 clear all
 
-% Alejandro Villamar - Universidad Israel %
+z% Alejandro Villamar - Universidad Israel %
 %% ----- Parametros de simulacion ----- %%
 % Ancho de banda
 B = 20*10^6; % 20 MHz

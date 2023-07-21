@@ -1,6 +1,5 @@
-
-% Alejandro Villamar - Universidad Israel %
-%% ----- Parametros de simulacion ----- %%
+%Alejandro Villamar - Universidad Israel 2023%
+%% ----- Parametros de simulacion red LIFI ----- %%
 % Ancho de banda
 BW = 100*10^6; % 20 MHz
 % Area del fotodiodo
