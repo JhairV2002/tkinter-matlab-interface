@@ -1,6 +1,6 @@
 %Alejandro Villamar - Universidad Israel 2023%
 %% ----- Parametros de simulacion red LIFI ----- %%
-function apartado4(area1,area2,alt,lm,pled,angle,leds,users)
+function apartado4(area1,area2,lm,pled,angle,leds,users)
 lumen = lm;
 potencia_watts = pled;
 lambda_min = lumen / potencia_watts; %Flujo luminoso por watt
@@ -52,10 +52,10 @@ L = leds; % 4 LEDS bombillas;
 K = users; % 1 Usuarios
 h = 0.85; % Altura del receptor
 % Posicion de los transmisores opticos
-LED_pos = [3.5, 3.5, alt; 
-           1.5, 3.5, alt; 
-           3.5, 1.5, alt; 
-           1.5, 1.5, alt];
+LED_pos = [3.5, 3.5, 3; 
+           1.5, 3.5, 3; 
+           3.5, 1.5, 3; 
+           1.5, 1.5, 3];
 
 %% Usuarios con P fotodidodos distribuidos mediante geometria piramidal
 Np = 4;
@@ -64,7 +64,7 @@ theta = 5*pi/180;
 
 %% Mapa 3D
 % Creamos el mapa
-grano = 0.1; % define la precision de nuestro mapa de color
+grano = 0.2; % define la precision de nuestro mapa de color
 % Escenario 5m x 5m x 3m
 [Ax,Ay] = meshgrid([0.1:grano:4.9]);
 % Guardmaos la variable rate de Block Diagonalization

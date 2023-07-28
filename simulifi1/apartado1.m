@@ -1,15 +1,28 @@
 %Alejandro Villamar - Universidad Israel 2023%
 %% ----- Parametros de simulacion red LIFI ----- %%
-function apartado1(area1,area2,pled,angle,leds,users)
-% Rango del espectro de luz - %Estándar 802.15.7 de la IEEE
-lambda = [475]; % Rango (380 - 789) de longitud de onda en nanómetros (nm)
+function apartado1(area1,area2,alt,lm,pled,angle,leds,users)
+lumen = lm;
+potencia_watts = pled;
+lambda_min = lumen / potencia_watts; %Flujo luminoso por watt
+lambda_max = lumen / potencia_watts; %Flujo luminoso por watt
+% Establecer los valores mínimos y máximos de las longitudes de onda
+lambda_min = lambda_min; % 380nm
+lambda_max = lambda_max; % 789nm
+
 % Convertir a metros
-lambda_m = lambda * 1e-9; % Convertir nm a metros
+lambda_m_min = lambda_min * 1e-9; % Convertir nm a metros
+lambda_m_max = lambda_max * 1e-9; % Convertir nm a metros
+
 % Calcular las frecuencias correspondientes
 c = 299792458; % Velocidad de la luz en metros por segundo
-f = c ./ lambda_m; % Frecuencias en Hz
+f_min = c / lambda_m_max; % Frecuencia mínima en Hz
+f_max = c / lambda_m_min; % Frecuencia máxima en Hz
+
+% Frecuencia promedio
+f_promedio = (f_min + f_max) / 2;
+
 % Frecuencia
-B = f; 
+B = f_promedio; 
 % Area del fotodiodo (m²)
 A = area1*area2;
 % Nivel de Ruido (Potencia de la señal y se mide en unidades de amperios por hertz)
@@ -29,7 +42,7 @@ R = 0.62;
 % Orden del filtro (filtra la señal eléctrica producida por el fotodiodo, elimina el ruido y otras interferencias)
 n = 1.5;
 % FoV (Campo de visión) (ángulo sólido del sensor de la cámara)
-FoV =  70*pi/180;
+FoV =  ang_rad*pi/180;
 % Respuesta del filtro (Transmisión óptica del filtro)
 Ts = (n^2)/(sin(FoV)^2);
 
@@ -39,10 +52,10 @@ L = leds; % 4 LEDS bombillas;
 K = users; % 1 Usuarios
 h = 0.85; % Altura del receptor
 % Posicion de los transmisores opticos
-LED_pos = [3.5, 3.5, 3; 
-           1.5, 3.5, 3; 
-           3.5, 1.5, 3; 
-           1.5, 1.5, 3];
+LED_pos = [3.5, 3.5, alt; 
+           1.5, 3.5, alt; 
+           3.5, 1.5, alt; 
+           1.5, 1.5, alt];
 
 % Obtener la altura de cada luz LED
 altura_LEDs = LED_pos(:, 3);
@@ -56,7 +69,7 @@ beta = 0;
 
 %% Mapa 3D
 % Creamos el mapa
-grano = 0.05; % define la precision de nuestro mapa de color
+grano = 0.01; % define la precision de nuestro mapa de color
 % Escenario de tamaño definido por el área ingresada
 x_min = 0;
 x_max = sqrt(A);
@@ -87,12 +100,28 @@ surf(Ax, Ay, real(SINR_NoCoop), real(SINR_NoCoop), 'EdgeColor', 'none')
 hold on
 scatter3(LED_pos(:,1), LED_pos(:,2), LED_pos(:,3), 'ro', 'filled')
 colorbar
-xlabel('Room x [m]')
-ylabel('Room y [m]')
+xlabel('Room x')
+ylabel('Room y')
 zlabel('SINR sin cooperación (dB)')
-title('SINR sin cooperación (dB)')
-print('SINR_sin_cooperación_(dB)','-dpng')
+title(sprintf('Mapa de SINR (Tamaño de la habitación: %.2f m x %.2f m)', x_max, y_max));
+
+% Agregar texto con la altura del techo
+altura_techo_text = sprintf('Altura del techo: %.2f m', alt);
+text(x_max-0.5, y_max-0.5, max(max(real(SINR_NoCoop))), altura_techo_text, 'Color', 'black', 'FontSize', 12, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top');
+
+% Primera imagen: Vista desde el ángulo predeterminado (por ejemplo, 30 grados)
+view(30, 30); % Establecer vista (azimut, elevación)
+print('SINR_sin_cooperación_vista1','-dpng')
+
+% Segunda imagen: Vista desde la parte superior del plano (elevación de 90 grados)
+view(0, 90); % Establecer vista (azimut, elevación)
+xticks(0:0.5:x_max); % Ajustar marcadores en el eje x
+yticks(0:0.5:y_max); % Ajustar marcadores en el eje y
+zticks(0:0.00:alt); % Ajustar marcadores en el eje z
+axis equal; % Igualar escala de los ejes x, y, z
+print('SINR_sin_cooperación_vista2','-dpng')
 close
+
 
 figure(2)
 R_NoCoop = log2(1 + SINR_NoCoop * B);
@@ -100,18 +129,36 @@ surf(Ax, Ay, real(R_NoCoop), real(R_NoCoop), 'EdgeColor', 'none')
 hold on
 scatter3(LED_pos(:,1), LED_pos(:,2), LED_pos(:,3), 'ro', 'filled')
 colorbar
-xlabel('Room x [m]')
-ylabel('Room y [m]')
+xlabel('Room x')
+ylabel('Room y')
 zlabel('Rate sin cooperación (Mbps)')
-title('Rate sin cooperación (Mbps)')
-print('Rate_sin_cooperación_(Mbps)','-dpng')
+title(sprintf('Mapa de Rate (Tamaño de la habitación: %.2f m x %.2f m)', x_max, y_max));
+
+% Primera imagen: Vista desde el ángulo predeterminado (por ejemplo, 30 grados)
+view(30, 30); % Establecer vista (azimut, elevación)
+print('Rate_sin_cooperación_vista1','-dpng')
+
+% Segunda imagen: Vista desde la parte superior del plano (elevación de 90 grados) con ejes ajustados
+view(0, 90); % Establecer vista (azimut, elevación)
+xticks(0:0.5:x_max); % Ajustar marcadores en el eje x
+yticks(0:0.5:y_max); % Ajustar marcadores en el eje y
+zticks(0:0.5:alt); % Ajustar marcadores en el eje z
+axis equal; % Igualar escala de los ejes x, y, z
+print('Rate_sin_cooperación_vista2','-dpng')
 close
+
 
 % Obtener la posición en metros de los LEDs en los ejes x y y
 LED_pos_x = LED_pos(:, 1);
 LED_pos_y = LED_pos(:, 2);
-
 % Crear una superficie que muestra la posición de los LEDs en los ejes x y y
+% Obtener el tamaño de la habitación (máximos en los ejes x e y)
+x_max = max(max(Ax));
+y_max = max(max(Ay));
+% Obtener el tamaño máximo para establecer el límite de los ejes
+max_room_size = max(x_max, y_max);
+
+% Gráfico de la posición de los LEDs en los ejes x y y
 figure(3)
 surf(Ax, Ay, zeros(size(Ax)), 'EdgeColor', 'none')
 hold on
@@ -121,7 +168,14 @@ colorbar
 xlabel('Room x [m]')
 ylabel('Room y [m]')
 zlabel('Posición de los LEDs')
-title('Posición de los LEDs')
+title(sprintf('Posición de los LEDs (Tamaño de la habitación: %.2f m x %.2f m)', x_max, y_max));
+axis equal % Esto asegura que los ejes tengan la misma escala
+% Establecer los incrementos de 0.5 en ambos ejes
+incremento = 0.5;
+xticks(0:incremento:max_room_size)
+yticks(0:incremento:max_room_size)
+xlim([0 max_room_size]) % Establecer límite en el eje x
+ylim([0 max_room_size]) % Establecer límite en el eje y
 print('Posición_de_los_LEDs1','-dpng')
 close
 

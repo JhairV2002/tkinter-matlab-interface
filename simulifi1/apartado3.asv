@@ -65,7 +65,7 @@ alfa = [45 135 225 315]*(pi/180);
 beta = 45*(pi/180);
 
 %% ----- Mapa 3D ----- %%
-grano = 0.01; % define la precision de nuestro mapa de color
+grano = 0.05; % define la precision de nuestro mapa de color
 % Escenario 5m x 5m x 3m
 [Ax,Ay] = meshgrid([0:grano:5]);
 H = zeros(L);
@@ -120,7 +120,7 @@ for x = 1:length(Ax)
         
         %% Equal gain combining %% Combinación de igual ganancia %%
         SINR_egc = (Pled*sum(H(Lmax,:))^2)/(Pled*(( sum(sum(H)) - sum(H(Lmax,:))))^2  + N*4);
-        R_egc(x,y) = lumen*log2(1+SINR_egc);
+        R_egc(x,y) = BW*log2(1+SINR_egc);
 
         
         %% Maximum ratio combining %% Combinación de relación máxima %%
@@ -138,7 +138,7 @@ for x = 1:length(Ax)
         num = (Pled*sum(w.*H(Lmax,:)))^2;
         SINR_rmc = num/denom;
                  
-        R_rmc(x,y) = lumen*log2(1+SINR_rmc);
+        R_rmc(x,y) = BW*log2(1+SINR_rmc);
 
         %% Blind Interference Alignment %% Alineación de Interferencia Ciega %%
         H = H';
@@ -146,7 +146,7 @@ for x = 1:length(Ax)
         Rz = (2*K-1)*eye(L);
         Rz(L,L) =1;
         Pstr = Pled;
-        R_bia(x,y)= lumen*Bbia*log2(det(eye(L)+Pstr*(H*H')/N*inv(Rz)));
+        R_bia(x,y)= BW*Bbia*log2(det(eye(L)+Pstr*(H*H')/N*inv(Rz)));
         
 
     end

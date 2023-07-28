@@ -108,8 +108,10 @@ class App(customtkinter.CTk):
         self.area2 = customtkinter.StringVar()
         self.lumens = customtkinter.StringVar()
         self.usuarios = customtkinter.StringVar()
-        self.angulo = customtkinter.StringVar()
         self.num_leds = 0
+        self.angulo = customtkinter.StringVar()
+        self.altura = customtkinter.StringVar()
+        self.cant_lumens = customtkinter.StringVar()
         self.title_form_frame = customtkinter.CTkFrame(self.content_frame)
         self.title_form_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -200,6 +202,38 @@ class App(customtkinter.CTk):
             row=1, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
         )
 
+        self.altura_label = customtkinter.CTkLabel(
+            self.title_form_frame, text="Altura de la habitación"
+        )
+
+        self.altura_label.grid(
+            row=3, column=5, padx=(20, 0), pady=(20, 20), sticky="nw"
+        )
+
+        self.altura_entry = customtkinter.CTkEntry(
+            self.title_form_frame, textvariable=self.altura
+        )
+
+        self.altura_entry.grid(
+            row=3, column=6, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
+        )
+
+        self.lumens_cant_label = customtkinter.CTkLabel(
+            self.title_form_frame, text="Lumens"
+        )
+
+        self.lumens_cant_label.grid(
+            row=4, column=1, padx=(20, 0), pady=(20, 20), sticky="nw"
+        )
+
+        self.lumens_cant_entry = customtkinter.CTkEntry(
+            self.title_form_frame, textvariable=self.cant_lumens
+        )
+
+        self.lumens_cant_entry.grid(
+            row=4, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
+        )
+
         # Leds Inputs
         self.switch_led1 = customtkinter.CTkSwitch(
             master=self.title_form_frame,
@@ -211,7 +245,7 @@ class App(customtkinter.CTk):
             # command=print(self.switch_led1_var.get()),
         )
         self.switch_led1.grid(
-            row=4, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
+            row=5, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
         )
 
         self.switch_led2 = customtkinter.CTkSwitch(
@@ -223,7 +257,7 @@ class App(customtkinter.CTk):
             command=lambda: self.incrementLeds(self.switch_led2_var.get()),
         )
         self.switch_led2.grid(
-            row=4, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
+            row=5, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
         )
 
         self.switch_led3 = customtkinter.CTkSwitch(
@@ -235,7 +269,7 @@ class App(customtkinter.CTk):
             command=lambda: self.incrementLeds(self.switch_led3_var.get()),
         )
         self.switch_led3.grid(
-            row=5, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
+            row=6, column=2, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
         )
 
         self.switch_led4 = customtkinter.CTkSwitch(
@@ -247,7 +281,7 @@ class App(customtkinter.CTk):
             command=lambda: self.incrementLeds(self.switch_led4_var.get()),
         )
         self.switch_led4.grid(
-            row=5, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
+            row=6, column=7, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nw"
         )
 
         self.calcular_button = customtkinter.CTkButton(
@@ -260,7 +294,7 @@ class App(customtkinter.CTk):
             text_color=("gray10", "#DCE4EE"),
         )
         self.calcular_button.grid(
-            row=6, column=1, columnspan=2, pady=(20, 20), padx=(20, 20)
+            row=7, column=1, columnspan=2, pady=(20, 20), padx=(20, 20)
         )
 
         self.calcular_apartado2 = customtkinter.CTkButton(
@@ -273,7 +307,7 @@ class App(customtkinter.CTk):
         )
 
         self.calcular_apartado2.grid(
-            row=6, column=3, columnspan=2, pady=(20, 20), padx=(20, 20)
+            row=7, column=3, columnspan=2, pady=(20, 20), padx=(20, 20)
         )
 
         self.calcular_apartado3 = customtkinter.CTkButton(
@@ -286,7 +320,7 @@ class App(customtkinter.CTk):
         )
 
         self.calcular_apartado3.grid(
-            row=6, column=5, columnspan=2, pady=(20, 20), padx=(20, 20)
+            row=7, column=5, columnspan=2, pady=(20, 20), padx=(20, 20)
         )
 
         self.calcular_apartado4 = customtkinter.CTkButton(
@@ -299,7 +333,7 @@ class App(customtkinter.CTk):
         )
 
         self.calcular_apartado4.grid(
-            row=6, column=7, columnspan=2, pady=(20, 20), padx=(20, 20)
+            row=7, column=7, columnspan=2, pady=(20, 20), padx=(20, 20)
         )
 
         # create the frame that contains the graphic result from matlab
@@ -364,7 +398,11 @@ class App(customtkinter.CTk):
             matlab.double([int(self.area1.get())]),
             # Area2
             matlab.double([int(self.area2.get())]),
-            # lumens
+            # Altura
+            matlab.double([int(self.altura.get())]),
+            # Lumens
+            matlab.double([int(self.cant_lumens.get())]),
+            # Potencia Leds
             matlab.double([int(self.lumens.get())]),
             # Angulo
             matlab.double([int(self.angulo.get())]),
@@ -375,14 +413,21 @@ class App(customtkinter.CTk):
             nargout=0,
         )
         # create the image
-        graph1 = Image.open(r"./simulifi1/SINR_sin_cooperación_(dB).png")
+        graph1 = Image.open(r"./simulifi1/Posición_de_los_LEDs1.png")
         graph1.thumbnail((525, 525))
 
-        graph2 = Image.open(r"./simulifi1/Rate_sin_cooperación_(Mbps).png")
+        graph2 = Image.open(r"./simulifi1/Rate_sin_cooperación_vista1.png")
         graph2.thumbnail((525, 525))
 
-        graph3 = Image.open(r"./simulifi1/Posición_de_los_LEDs1.png")
+        graph3 = Image.open(r"./simulifi1/Rate_sin_cooperación_vista2.png")
         graph3.thumbnail((525, 525))
+
+        graph4 = Image.open(r"./simulifi1/SINR_sin_cooperación_vista1.png")
+        graph4.thumbnail((525, 525))
+
+        graph5 = Image.open(r"./simulifi1/SINR_sin_cooperación_vista2.png")
+        graph5.thumbnail((525, 525))
+
         self.graphic_image1 = ImageTk.PhotoImage(
             graph1
             # Image.open(r"./simulifi1/Rate_NoCoop.png")
@@ -393,6 +438,11 @@ class App(customtkinter.CTk):
         )
 
         self.graphic_image3 = ImageTk.PhotoImage(graph3)
+
+        self.graphic_image4 = ImageTk.PhotoImage(graph4)
+
+        self.graphic_image5 = ImageTk.PhotoImage(graph5)
+
         # place the image in label
         self.graphic_label1 = tkinter.Label(
             self.result_graphic, image=self.graphic_image1
@@ -405,10 +455,18 @@ class App(customtkinter.CTk):
         self.graphic_label3 = tkinter.Label(
             self.result_graphic, image=self.graphic_image3
         )
+        self.graphic_label4 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image4
+        )
+        self.graphic_label5 = tkinter.Label(
+            self.result_graphic, image=self.graphic_image5
+        )
 
         self.graphic_label1.grid(row=0, column=1, sticky="ew")
         self.graphic_label2.grid(row=0, column=2, sticky="ew")
         self.graphic_label3.grid(row=1, column=1, sticky="ew")
+        self.graphic_label4.grid(row=1, column=2, sticky="ew")
+        self.graphic_label5.grid(row=2, column=1, sticky="ew")
 
     def calcular_apartado2(self):
         children = self.result_graphic.winfo_children()
@@ -423,7 +481,11 @@ class App(customtkinter.CTk):
             matlab.double([int(self.area1.get())]),
             # Area2
             matlab.double([int(self.area2.get())]),
-            # lumens
+            # Altura
+            matlab.double([int(self.altura.get())]),
+            # Lumens
+            matlab.double([int(self.cant_lumens.get())]),
+            # Potencia Leds
             matlab.double([int(self.lumens.get())]),
             # Angulo
             matlab.double([int(self.angulo.get())]),
@@ -483,7 +545,11 @@ class App(customtkinter.CTk):
             matlab.double([int(self.area1.get())]),
             # Area2
             matlab.double([int(self.area2.get())]),
-            # lumens
+            # Altura
+            matlab.double([int(self.altura.get())]),
+            # Lumens
+            matlab.double([int(self.cant_lumens.get())]),
+            # Potencia Leds
             matlab.double([int(self.lumens.get())]),
             # Angulo
             matlab.double([int(self.angulo.get())]),
@@ -543,7 +609,11 @@ class App(customtkinter.CTk):
             matlab.double([int(self.area1.get())]),
             # Area2
             matlab.double([int(self.area2.get())]),
-            # lumens
+            # Altura
+            matlab.double([int(self.altura.get())]),
+            # Lumens
+            matlab.double([int(self.cant_lumens.get())]),
+            # Potencia Leds
             matlab.double([int(self.lumens.get())]),
             # Angulo
             matlab.double([int(self.angulo.get())]),
